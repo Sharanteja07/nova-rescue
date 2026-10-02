@@ -5,6 +5,14 @@
 
 ---
 
+## Live Demo
+
+**Live application:** https://nova-rescue.onrender.com
+
+**Deployment:** Render Web Service (free instance). The service runs the production Vite build through the native Node.js server and exposes the `/api/status` and `/api/analyze-order` endpoints. The free instance may spin down after inactivity, so the first request can take longer to wake the service.
+
+---
+
 ## Problem Diagnosis
 
 **NOVA CART** is a quick-commerce and local shopping platform operating across three major Indian metropolitan cities (Bengaluru, Mumbai, Delhi-NCR) with a network of 620 local partner stores. 
@@ -330,7 +338,16 @@ PORT=8080
 
 ## Deployment
 
-### Deploy to Google Cloud Run (Recommended)
+### Deploy to Render (Current Live Deployment)
+The competition build is currently deployed at **https://nova-rescue.onrender.com**.
+
+- **Build Command:** `npm install && npm run build`
+- **Start Command:** `npm start`
+- **Branch:** `main`
+- **Server:** Native Node.js `server.js`
+- **AI:** Server-side Gemini integration with deterministic fallback
+
+### Deploy to Google Cloud Run (Optional)
 NOVA RESCUE includes a minimal, multi-stage [Dockerfile](file:///Dockerfile) configured specifically for Cloud Run:
 ```bash
 # 1. Build and deploy container directly to Cloud Run
