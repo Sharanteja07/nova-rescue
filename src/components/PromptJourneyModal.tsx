@@ -71,8 +71,8 @@ export const PromptJourneyModal: React.FC<PromptJourneyModalProps> = ({
         </div>
 
         <div className="modal-body" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
-          <p style={{ fontSize: '0.8125rem', color: '#94a3b8' }}>
-            The methodological evolution of NOVA RESCUE throughout the PROMPTWARS Business Rescue Challenge:
+          <p style={{ fontSize: '0.8125rem', color: '#cbd5e1', lineHeight: 1.5, fontStyle: 'italic', backgroundColor: '#090d16', padding: '0.625rem 0.875rem', borderRadius: '6px', borderLeft: '3px solid #3b82f6' }}>
+            Note: These prompts represent the key decision points in the reasoning journey; the complete AI conversation is not included.
           </p>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>

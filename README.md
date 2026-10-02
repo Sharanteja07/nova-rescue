@@ -59,6 +59,8 @@ Rather than acting as a generic conversational chatbot, NOVA RESCUE serves as an
 
 ## Prompt Journey
 
+> *Note: These prompts represent the key decision points in the reasoning journey; the complete AI conversation is not included.*
+
 ### Prompt 1 — Business Diagnosis
 Analyzed the six-month performance data and customer signals to identify the underlying business problem rather than optimizing for surface-level growth.
 
