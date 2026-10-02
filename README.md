@@ -57,6 +57,28 @@ Rather than acting as a generic conversational chatbot, NOVA RESCUE serves as an
 
 ---
 
+## Prompt Journey
+
+### Prompt 1 — Business Diagnosis
+Analyzed the six-month performance data and customer signals to identify the underlying business problem rather than optimizing for surface-level growth.
+
+### Prompt 2 — Hypothesis Challenge
+Compared retention, delivery, inventory, marketing and partner-store hypotheses against the case evidence.
+
+### Prompt 3 — Root Cause
+Investigated the relationship between order reliability, cancellations, support interactions and repeat purchasing.
+
+### Prompt 4 — Product Direction
+Explored digital interventions that could be implemented without warehouses, major infrastructure expansion, hundreds of employees or unsustainable discounts.
+
+### Prompt 5 — Rescue Workflow
+Designed a system that detects risky orders, identifies likely failure causes and recommends an operational intervention.
+
+### Prompt 6 — Business Impact
+Designed a scenario model to estimate the potential effect on cancellation, support load, GMV and retention.
+
+---
+
 ## Target User
 
 - **Primary User:** NOVA CART Operations Control Desk & Business Rescue Specialists.

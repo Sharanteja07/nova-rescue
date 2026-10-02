@@ -6,7 +6,8 @@ import {
   Cpu, 
   ShieldCheck, 
   RotateCcw,
-  MapPin
+  MapPin,
+  Compass
 } from 'lucide-react';
 import { ServerAiStatus } from '../services/aiService';
 
@@ -17,6 +18,7 @@ interface HeaderProps {
   onCityChange: (city: string) => void;
   serverStatus: ServerAiStatus;
   onOpenArchitectureModal: () => void;
+  onOpenJourneyModal: () => void;
   onResetDemoData: () => void;
 }
 
@@ -27,6 +29,7 @@ export const Header: React.FC<HeaderProps> = ({
   onCityChange,
   serverStatus,
   onOpenArchitectureModal,
+  onOpenJourneyModal,
   onResetDemoData
 }) => {
   const isLive = Boolean(serverStatus?.configured);
@@ -116,6 +119,19 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <ShieldCheck size={14} aria-hidden="true" />
             <span>AI Security</span>
+          </button>
+
+          {/* Prompt Journey Modal Trigger */}
+          <button
+            type="button"
+            onClick={onOpenJourneyModal}
+            className="btn-secondary"
+            style={{ color: '#93c5fd', borderColor: 'rgba(59, 130, 246, 0.4)' }}
+            title="View the 6-stage PROMPTWARS prompt journey"
+            aria-label="View PROMPTWARS Prompt Journey"
+          >
+            <Compass size={14} aria-hidden="true" />
+            <span>Prompt Journey</span>
           </button>
 
           {/* Reset Demo State */}

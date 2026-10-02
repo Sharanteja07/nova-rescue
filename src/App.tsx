@@ -10,6 +10,7 @@ import { OrderIntelligence } from './components/OrderIntelligence';
 import { RescueActionModal } from './components/RescueActionModal';
 import { BusinessImpactView } from './components/BusinessImpactView';
 import { AiArchitectureModal } from './components/AiArchitectureModal';
+import { PromptJourneyModal } from './components/PromptJourneyModal';
 
 export const App: React.FC = () => {
   // Demo orders state
@@ -22,6 +23,7 @@ export const App: React.FC = () => {
   const [aiAnalyses, setAiAnalyses] = useState<Record<string, AIAnalysisResult>>({});
   const [isAiLoading, setIsAiLoading] = useState<boolean>(false);
   const [isArchitectureModalOpen, setIsArchitectureModalOpen] = useState<boolean>(false);
+  const [isJourneyModalOpen, setIsJourneyModalOpen] = useState<boolean>(false);
   const [activeRescueAction, setActiveRescueAction] = useState<RescueActionType | null>(null);
   const [serverStatus, setServerStatus] = useState<ServerAiStatus>({
     configured: false,
@@ -113,6 +115,7 @@ export const App: React.FC = () => {
         onCityChange={setSelectedCity}
         serverStatus={serverStatus}
         onOpenArchitectureModal={() => setIsArchitectureModalOpen(true)}
+        onOpenJourneyModal={() => setIsJourneyModalOpen(true)}
         onResetDemoData={handleResetDemoData}
       />
 
@@ -164,6 +167,12 @@ export const App: React.FC = () => {
         isOpen={isArchitectureModalOpen}
         onClose={() => setIsArchitectureModalOpen(false)}
         serverStatus={serverStatus}
+      />
+
+      {/* PROMPTWARS Prompt Journey Modal */}
+      <PromptJourneyModal
+        isOpen={isJourneyModalOpen}
+        onClose={() => setIsJourneyModalOpen(false)}
       />
     </div>
   );
