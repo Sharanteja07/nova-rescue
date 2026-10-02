@@ -117,7 +117,7 @@ export function applyRescueAction(payload: ApplyRescuePayload): Order {
       // Transparency mitigates churn even if ETA remains slightly elongated
       actionTitle = `Proactive Customer Communication Dispatched`;
       actionSummary = `Sent proactive status update + priority courier tracking to ${order.customer.customerName}.`;
-      explanation = `Transparent communication resets customer expectations before frustration escalates. Platform data shows proactive notification reduces customer support tickets by 62% and cuts delay-induced cancellations in half.`;
+      explanation = `Transparent communication resets customer expectations before frustration escalates. Proactive notification addresses customer expectation gaps, reducing inbound support inquiries and curtailing self-service order cancellations during transit delays.`;
       break;
     }
 

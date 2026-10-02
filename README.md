@@ -44,7 +44,7 @@ The empirical operational telemetry reveals a sharp contrast between growth and 
 In quick-commerce, **customer retention is not won with marketing discounts; it is earned through operational predictability**.
 
 1. **The 3rd-Order Retention Milestone (72% Rule):** Platform telemetry proves that customers who reach **3 completed orders** achieve a **72% probability of ordering again the following month**. When an order fails during the customer's early journey (Orders 1, 2, or 3), that customer is permanently lost to competing platforms.
-2. **The 62% Addressable Churn Core:** 35% of cancellations stem from inventory unconfirmed at stale partner stores, and 27% stem from preventable transit delays. Together, **62% of cancellations are operational and completely preventable** through real-time telemetry surveillance and automated intervention.
+2. **Operational Rescue Opportunity (The 62% Cancellation Share):** 62% of recorded cancellations are attributed to two operational categories in the case data: product unavailability (35%) and customer cancellation because of delivery delay (27%). These categories represent the primary operational rescue opportunity; the case does not prove that all 62% are fully preventable.
 3. **The Information Asymmetry:** Customers do not cancel because a store is busy; they cancel because the system is silent until failure occurs. Real-time pre-failure intervention transforms potential churn into sustained brand trust.
 
 ---
@@ -154,27 +154,38 @@ NOVA RESCUE integrates **Google Gemini 1.5 Flash** (and Gemini 2.0 Flash) throug
 
 ---
 
-## Business Impact
+## Business Impact & Methodological Framework
 
-The platform explicitly distinguishes between **historical actuals**, **active demo session metrics**, and **projected scenario models**:
+The platform rigorously and transparently separates **four distinct analytical categories**:
 
-### 1. Historical NOVA CART Benchmark (Case Actuals)
+### 1. Historical Case Evidence (Empirical Case Facts)
+Direct metrics from the NOVA CART competition case brief:
 - **Monthly Orders:** 38,500
 - **Average Order Value (AOV):** ₹486
 - **Current Cancellation Rate:** 11.0% (4,235 orders/month)
 - **Monthly Customer Support Inquiries:** 5,900
 - **Repeat Order Collapse:** Dropped from 41% to 27%
+- **Cancellation Root Causes:** 35% product unavailability, 27% delivery delay (62% combined operational categories)
+- **Retention Probability:** 72% probability of ordering next month after completing order #3
 
-### 2. Active Demonstration Session (Observed Live)
-- Real-time calculations tracking orders analyzed, high-risk flags isolated, concrete interventions executed, and protected cart merchandise value.
+### 2. Deterministic Calculations (Live Session State)
+- Mathematical operations evaluated on the active order objects in the local session (measuring exact GMV protected, orders rescued, and risk score deltas across demonstrated orders).
 
-### 3. Macro Platform Scenario Projection (Simulated Model)
-Scaling NOVA RESCUE across 85% of platform order volume (32,725 orders/month):
-- **Preventable Cancellations Monthly:** ~1,940 orders saved
-- **Projected Cancellation Rate Reduction:** **11.0% → 6.2%**
-- **Monthly Gross Merchandise Value (GMV) Saved:** **₹9.4 Lakhs+ / month**
-- **Customer Support Inquiries Averted:** **~2,690 tickets / month** (saving ₹3.2 Lakhs in support OPEX)
-- **Annualized Retention LTV Unlocked:** **₹88 Lakhs+** by converting customers through the 72% 3rd-order milestone.
+### 3. Synthetic Demonstration Data (Sample Orders)
+- Representative operational scenarios across Bengaluru, Mumbai, and Delhi-NCR created for operator evaluation.
+
+### 4. Scenario Projections & Modeled Impact (Forward-Looking Estimates)
+Forward-looking projections are mathematical estimates derived from explicit, stated assumptions:
+
+| Projected Metric (at 85% Store Coverage) | Scenario Estimate | Underlying Modeling Assumptions |
+| :--- | :--- | :--- |
+| **Modeled Monthly Cancellations Avoided** | **~1,940 orders/mo** | Derived from 74% resolution of the 62% addressable cancellation causes across covered stores. |
+| **Projected Cancellation Rate** | **11.0% → 6.2%** | Modeled reduction assuming addressable causes are mitigated through proactive rerouting/substitutions. |
+| **Modeled Monthly GMV Preserved** | **~₹9.4 Lakhs / mo** | Projected at historical ₹486 AOV across modeled cancellations avoided. |
+| **Modeled Support Inquiries Averted** | **~2,690 tickets / mo** | Assumes 1.38 support tickets generated per order cancellation; saves estimated ₹3.2L in OPEX at ₹120/ticket. |
+| **Modeled Annualized Retention LTV** | **~₹88 Lakhs** | Assumes 38% of rescued orders belong to early cohorts converting past the 72% 3rd-order repeat threshold (2.8 orders/mo). |
+
+*Note: Projections are simulation estimates based on mathematical models and must never be confused with historical platform actuals.*
 
 ---
 

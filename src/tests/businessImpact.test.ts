@@ -34,5 +34,8 @@ describe('NOVA RESCUE - Business Impact & Retention Modeling Test Suite', () => 
     expect(projection.supportTicketsAvertedMonthly).toBeGreaterThan(2000);
     expect(projection.projectedCancellationRate).toBeLessThan(NOVA_CART_HISTORICAL_BENCHMARKS.cancellationRateCurrent * 100);
     expect(projection.projectedCancellationRate).toBeGreaterThan(4);
+    expect(projection.assumptions).toBeDefined();
+    expect(projection.assumptions.addressableCategoryShare).toContain('62%');
+    expect(projection.assumptions.operationalRescueEfficiencyPct).toBe(74);
   });
 });

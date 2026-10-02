@@ -194,7 +194,7 @@ export const RescueActionModal: React.FC<RescueActionModalProps> = ({
               </div>
 
               <div style={{ fontSize: '0.75rem', color: '#34d399', backgroundColor: 'rgba(16, 185, 129, 0.1)', padding: '0.625rem', borderRadius: '4px' }}>
-                ✓ Proactive communication historically reduces support ticket escalation by 62%.
+                ✓ Modeled impact: Proactive notification directly manages customer expectations and prevents inbound support ticket escalation.
               </div>
             </div>
           )}
