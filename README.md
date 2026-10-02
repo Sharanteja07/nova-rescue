@@ -180,11 +180,11 @@ Scaling NOVA RESCUE across 85% of platform order volume (32,725 orders/month):
 
 ## Security
 
-1. **No Hardcoded Secrets:** No API keys or credentials exist in the source code or git history.
-2. **Environment Variable Configuration:** Support for `GEMINI_API_KEY` via `.env.local` with safe templates in `.env.example`.
-3. **Client-Side Secret Isolation:** Operator-entered API keys in the UI are held exclusively in browser session storage and never dispatched to third parties.
-4. **Strict Input Validation:** All order payloads and AI-generated responses are validated against TypeScript schemas (`validateAIAnalysisSchema`).
-5. **Git Hygiene:** Strict `.gitignore` protecting `.env`, build artifacts, `dist`, `coverage`, and `node_modules` to keep the final repository **under 1 MB (310 KB)**.
+1. **Zero-Secret Client Architecture:** The browser client is completely isolated from credentials. Real API keys are never exposed, requested, or stored in the browser (no React state, no `localStorage`, no `sessionStorage`, no `VITE_*` client variables, and no URL parameters).
+2. **Server-Side API Proxy (`/api/analyze-order`):** The browser dispatches only sanitized order telemetry to the server-side proxy endpoint. The Node.js server reads `process.env.GEMINI_API_KEY` securely from the backend environment and performs server-to-server TLS calls to Google's official Gemini endpoint.
+3. **Production-Safe Deterministic Default:** If no `GEMINI_API_KEY` is provided on the server, the application automatically operates in deterministic production fallback mode with zero downtime or broken workflows.
+4. **Strict Server-Side & Client-Side Schema Validation:** All order payloads and AI-generated responses are validated against strongly typed schemas (`validateStructuredSchema` and `validateAIAnalysisSchema`).
+5. **Git Hygiene & Secret Prevention:** Strict `.gitignore` protecting `.env`, `.env.local`, build artifacts, `dist`, `coverage`, and `node_modules` ensuring the repository size remains **~110 KB (under 0.2 MB)**.
 
 ---
 
@@ -196,8 +196,12 @@ Comprehensive automated tests written in **Vitest**:
 npm test
 ```
 
-### Test Coverage (17 Passing Tests across 4 Suites)
-1. **Risk Engine (`src/tests/riskEngine.test.ts` - 8 tests):**
+### Test Coverage (20 Passing Tests across 5 Suites)
+1. **Server Proxy Security (`src/tests/serverProxy.test.ts` - 3 tests):**
+   - Secure fallback when no `GEMINI_API_KEY` is configured on the server.
+   - Safe rejection of placeholder or empty keys.
+   - Structured JSON operational schema validation.
+2. **Risk Engine (`src/tests/riskEngine.test.ts` - 8 tests):**
    - Low inventory risk on fresh sync (<1h).
    - Critical inventory risk detection on stale inventory (>24h, >48h).
    - High store rejection and catalog friction scoring.
@@ -206,16 +210,16 @@ npm test
    - Multi-factor high/critical risk classification.
    - 3rd-order customer retention stake (72% probability) annotation.
    - Graceful handling of invalid/null order payloads without crashing.
-2. **Rescue Engine (`src/tests/rescueEngine.test.ts` - 4 tests):**
+3. **Rescue Engine (`src/tests/rescueEngine.test.ts` - 4 tests):**
    - `SWITCH_STORE` state mutation, store rerouting, and reliability score improvement.
    - `SUBSTITUTE_PRODUCT` replacing unconfirmed SKUs and eliminating stockout penalties.
    - `ADJUST_DELIVERY` priority courier dispatch and ETA reduction.
    - `PROACTIVE_NOTIFY` reducing customer cancellation probability.
-3. **AI & Fallback Engine (`src/tests/fallbackEngine.test.ts` - 3 tests):**
+4. **AI & Fallback Engine (`src/tests/fallbackEngine.test.ts` - 3 tests):**
    - JSON schema validation of structured operational diagnosis.
    - Rejection of malformed or incomplete responses.
    - Deterministic offline diagnosis generation for inventory, delivery, and store friction.
-4. **Business Impact Model (`src/tests/businessImpact.test.ts` - 2 tests):**
+5. **Business Impact Model (`src/tests/businessImpact.test.ts` - 2 tests):**
    - Live session rescued order metrics, GMV protection, and retention count.
    - Macro platform scenario mathematical modeling against NOVA CART benchmarks.
 
@@ -294,7 +298,7 @@ PORT=3000
 1. Connect this repository to Vercel or Netlify.
 2. Build Command: `npm run build`
 3. Output Directory: `dist`
-4. Set optional environment variable: `VITE_GEMINI_API_KEY` (or configure live in the UI).
+4. Set optional server environment variable: `GEMINI_API_KEY` (server-side only). If omitted, deterministic fallback operates automatically.
 5. Deploy.
 
 ---

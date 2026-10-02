@@ -2,14 +2,14 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Order, AIAnalysisResult, RescueActionType } from './types';
 import { getInitialDemoOrders } from './data/demoOrders';
 import { applyRescueAction, ApplyRescuePayload } from './engine/rescueEngine';
-import { analyzeOrderWithAI, getActiveGeminiApiKey } from './services/aiService';
+import { analyzeOrderWithAI, checkServerAiStatus, ServerAiStatus } from './services/aiService';
 
 import { Header } from './components/Header';
 import { RescueConsole } from './components/RescueConsole';
 import { OrderIntelligence } from './components/OrderIntelligence';
 import { RescueActionModal } from './components/RescueActionModal';
 import { BusinessImpactView } from './components/BusinessImpactView';
-import { ApiKeyModal } from './components/ApiKeyModal';
+import { AiArchitectureModal } from './components/AiArchitectureModal';
 
 export const App: React.FC = () => {
   // Demo orders state
@@ -21,21 +21,27 @@ export const App: React.FC = () => {
   // AI & Modals state
   const [aiAnalyses, setAiAnalyses] = useState<Record<string, AIAnalysisResult>>({});
   const [isAiLoading, setIsAiLoading] = useState<boolean>(false);
-  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState<boolean>(false);
+  const [isArchitectureModalOpen, setIsArchitectureModalOpen] = useState<boolean>(false);
   const [activeRescueAction, setActiveRescueAction] = useState<RescueActionType | null>(null);
-  const [isAiLive, setIsAiLive] = useState<boolean>(() => !!getActiveGeminiApiKey());
+  const [serverStatus, setServerStatus] = useState<ServerAiStatus>({
+    configured: false,
+    model: 'gemini-1.5-flash',
+    mode: 'DETERMINISTIC_FALLBACK'
+  });
+
+  // Query server-side AI connection on mount
+  useEffect(() => {
+    checkServerAiStatus().then(status => {
+      setServerStatus(status);
+    });
+  }, []);
 
   // Find currently selected order
   const selectedOrder = useMemo(() => {
     return orders.find(o => o.id === selectedOrderId) || orders[0];
   }, [orders, selectedOrderId]);
 
-  // Update AI live status indicator
-  const handleKeyUpdated = useCallback(() => {
-    setIsAiLive(!!getActiveGeminiApiKey());
-  }, []);
-
-  // Run AI / Fallback analysis for an order
+  // Run AI / Fallback analysis for an order via server proxy
   const runAnalysis = useCallback(async (order: Order, force: boolean = false) => {
     if (!order) return;
     if (!force && aiAnalyses[order.id]) return;
@@ -105,8 +111,8 @@ export const App: React.FC = () => {
         onTabChange={setActiveTab}
         selectedCity={selectedCity}
         onCityChange={setSelectedCity}
-        isAiLive={isAiLive}
-        onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
+        serverStatus={serverStatus}
+        onOpenArchitectureModal={() => setIsArchitectureModalOpen(true)}
         onResetDemoData={handleResetDemoData}
       />
 
@@ -153,11 +159,11 @@ export const App: React.FC = () => {
         />
       )}
 
-      {/* API Key Modal */}
-      <ApiKeyModal
-        isOpen={isApiKeyModalOpen}
-        onClose={() => setIsApiKeyModalOpen(false)}
-        onKeyUpdated={handleKeyUpdated}
+      {/* Secure AI Architecture & Status Modal */}
+      <AiArchitectureModal
+        isOpen={isArchitectureModalOpen}
+        onClose={() => setIsArchitectureModalOpen(false)}
+        serverStatus={serverStatus}
       />
     </div>
   );

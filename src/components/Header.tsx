@@ -4,18 +4,19 @@ import {
   Activity, 
   BarChart3, 
   Cpu, 
-  Key, 
+  ShieldCheck, 
   RotateCcw,
   MapPin
 } from 'lucide-react';
+import { ServerAiStatus } from '../services/aiService';
 
 interface HeaderProps {
   activeTab: 'CONSOLE' | 'IMPACT';
   onTabChange: (tab: 'CONSOLE' | 'IMPACT') => void;
   selectedCity: string;
   onCityChange: (city: string) => void;
-  isAiLive: boolean;
-  onOpenApiKeyModal: () => void;
+  serverStatus: ServerAiStatus;
+  onOpenArchitectureModal: () => void;
   onResetDemoData: () => void;
 }
 
@@ -24,10 +25,12 @@ export const Header: React.FC<HeaderProps> = ({
   onTabChange,
   selectedCity,
   onCityChange,
-  isAiLive,
-  onOpenApiKeyModal,
+  serverStatus,
+  onOpenArchitectureModal,
   onResetDemoData
 }) => {
+  const isLive = serverStatus.configured;
+
   return (
     <header className="app-header" role="banner">
       <div className="header-inner">
@@ -86,29 +89,33 @@ export const Header: React.FC<HeaderProps> = ({
             </select>
           </div>
 
-          {/* AI Engine Status */}
-          <div 
-            className="ai-status-pill"
-            title={isAiLive ? "Google Gemini 1.5 Flash API active" : "Deterministic Operations Fallback Engine active"}
-          >
-            <span 
-              className={`status-dot ${isAiLive ? 'active' : 'fallback'}`} 
-              aria-hidden="true"
-            />
-            <Cpu size={14} color={isAiLive ? "#10b981" : "#f59e0b"} aria-hidden="true" />
-            <span>{isAiLive ? 'Gemini 1.5 Flash' : 'Deterministic Mode'}</span>
-          </div>
-
-          {/* Configure API Key */}
+          {/* AI Engine Status (Server-Side Proxy Status) */}
           <button
             type="button"
-            onClick={onOpenApiKeyModal}
-            className="btn-secondary"
-            title="Configure Gemini API Key"
-            aria-label="Configure AI settings"
+            onClick={onOpenArchitectureModal}
+            className="ai-status-pill"
+            style={{ cursor: 'pointer', background: 'var(--bg-surface-elevated)', border: '1px solid var(--border-muted)' }}
+            title={isLive ? "Server-Side Gemini 1.5 Flash Proxy Connected" : "Deterministic Operations Fallback Engine Active (Safe Default)"}
+            aria-label="Inspect AI Security & Server Architecture"
           >
-            <Key size={14} aria-hidden="true" />
-            <span>AI Config</span>
+            <span 
+              className={`status-dot ${isLive ? 'active' : 'fallback'}`} 
+              aria-hidden="true"
+            />
+            <Cpu size={14} color={isLive ? "#10b981" : "#f59e0b"} aria-hidden="true" />
+            <span>{isLive ? 'Server Gemini Proxy' : 'Deterministic Mode'}</span>
+          </button>
+
+          {/* AI Architecture & Security Modal Trigger */}
+          <button
+            type="button"
+            onClick={onOpenArchitectureModal}
+            className="btn-secondary"
+            title="Inspect AI Security Architecture"
+            aria-label="Inspect AI Security Architecture"
+          >
+            <ShieldCheck size={14} aria-hidden="true" />
+            <span>AI Security</span>
           </button>
 
           {/* Reset Demo State */}
