@@ -29,7 +29,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenArchitectureModal,
   onResetDemoData
 }) => {
-  const isLive = serverStatus.configured;
+  const isLive = Boolean(serverStatus?.configured);
 
   return (
     <header className="app-header" role="banner">
