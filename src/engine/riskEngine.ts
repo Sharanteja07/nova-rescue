@@ -8,7 +8,6 @@
  */
 
 import {
-  Order,
   OrderItem,
   StoreContext,
   DeliveryConditions,

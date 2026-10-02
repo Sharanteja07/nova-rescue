@@ -13,7 +13,7 @@ function novaRescueServerPlugin(apiKey: string | undefined, model: string): Plug
           const isConfigured = Boolean(apiKey && apiKey.trim() && apiKey !== 'your_gemini_api_key_here');
           res.end(JSON.stringify({
             configured: isConfigured,
-            model: model || 'gemini-1.5-flash',
+            model: model || 'gemini-2.5-flash',
             mode: isConfigured ? 'SERVER_SIDE_GEMINI' : 'DETERMINISTIC_FALLBACK',
             endpoint: '/api/analyze-order'
           }));
@@ -55,7 +55,7 @@ function novaRescueServerPlugin(apiKey: string | undefined, model: string): Plug
           const isConfigured = Boolean(apiKey && apiKey.trim() && apiKey !== 'your_gemini_api_key_here');
           res.end(JSON.stringify({
             configured: isConfigured,
-            model: model || 'gemini-1.5-flash',
+            model: model || 'gemini-2.5-flash',
             mode: isConfigured ? 'SERVER_SIDE_GEMINI' : 'DETERMINISTIC_FALLBACK',
             endpoint: '/api/analyze-order'
           }));
@@ -90,7 +90,7 @@ export default defineConfig(({ mode }) => {
   // Read environment variables on Node server side only (not exposed to browser client)
   const env = loadEnv(mode, process.cwd(), '');
   const apiKey = process.env.GEMINI_API_KEY || env.GEMINI_API_KEY || '';
-  const model = process.env.GEMINI_MODEL || env.GEMINI_MODEL || 'gemini-1.5-flash';
+  const model = process.env.GEMINI_MODEL || env.GEMINI_MODEL || 'gemini-2.5-flash';
 
   return {
     plugins: [

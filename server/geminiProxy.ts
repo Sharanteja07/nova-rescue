@@ -48,8 +48,17 @@ export function validateStructuredSchema(data: any): boolean {
 export async function processServerOrderAnalysis(
   order: any,
   apiKey: string | undefined,
-  modelName: string = 'gemini-1.5-flash'
+  modelName: string = 'gemini-2.5-flash'
 ): Promise<ServerAnalyzeResult> {
+  // Validate order input payload
+  if (!order || typeof order !== 'object' || !order.id) {
+    return {
+      fallback: true,
+      source: 'DETERMINISTIC_FALLBACK',
+      error: 'Invalid order telemetry payload provided'
+    };
+  }
+
   // If no server-side key is provided, indicate fallback immediately
   if (!apiKey || !apiKey.trim() || apiKey === 'your_gemini_api_key_here') {
     return {
@@ -59,7 +68,7 @@ export async function processServerOrderAnalysis(
     };
   }
 
-  const model = modelName.trim() || 'gemini-1.5-flash';
+  const model = modelName.trim() || 'gemini-2.5-flash';
   const url = `${GEMINI_API_ENDPOINT}/${model}:generateContent?key=${apiKey.trim()}`;
 
   const prompt = `

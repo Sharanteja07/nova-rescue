@@ -17,9 +17,9 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 const API_KEY = process.env.GEMINI_API_KEY || '';
-const MODEL = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 const DIST_DIR = path.join(__dirname, 'dist');
 
 const MIME_TYPES = {
@@ -32,9 +32,33 @@ const MIME_TYPES = {
   '.ico': 'image/x-icon'
 };
 
+function validateStructuredSchema(data) {
+  if (!data || typeof data !== 'object') return false;
+  if (typeof data.risk_summary !== 'string' || !data.risk_summary.trim()) return false;
+  if (typeof data.primary_risk !== 'string' || !data.primary_risk.trim()) return false;
+  if (!Array.isArray(data.risk_drivers) || data.risk_drivers.length === 0) return false;
+  if (typeof data.root_cause !== 'string' || !data.root_cause.trim()) return false;
+  if (typeof data.recommended_action !== 'string') return false;
+  if (typeof data.reason !== 'string' || !data.reason.trim()) return false;
+  if (typeof data.expected_effect !== 'string' || !data.expected_effect.trim()) return false;
+
+  const validActions = [
+    'SWITCH_STORE',
+    'SUBSTITUTE_PRODUCT',
+    'PROACTIVE_NOTIFY',
+    'ADJUST_DELIVERY',
+    'PROCEED'
+  ];
+  return validActions.includes(data.recommended_action);
+}
+
 async function callGeminiServerSide(order) {
+  if (!order || typeof order !== 'object' || !order.id) {
+    return { fallback: true, source: 'DETERMINISTIC_FALLBACK', error: 'Invalid order telemetry payload provided' };
+  }
+
   if (!API_KEY || !API_KEY.trim() || API_KEY === 'your_gemini_api_key_here') {
-    return { fallback: true, source: 'DETERMINISTIC_FALLBACK' };
+    return { fallback: true, source: 'DETERMINISTIC_FALLBACK', error: 'GEMINI_API_KEY not configured on server. Operating in deterministic production fallback mode.' };
   }
 
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
@@ -63,21 +87,31 @@ Respond strictly with valid JSON conforming to:
 `;
 
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 9000);
+
     const resp = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
         generationConfig: { temperature: 0.1, responseMimeType: 'application/json' }
       })
     });
 
-    if (!resp.ok) return { fallback: true, source: 'DETERMINISTIC_FALLBACK' };
+    clearTimeout(timeoutId);
+
+    if (!resp.ok) return { fallback: true, source: 'DETERMINISTIC_FALLBACK', error: `Gemini API returned status ${resp.status}` };
     const data = await resp.json();
     const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!text) return { fallback: true, source: 'DETERMINISTIC_FALLBACK' };
+    if (!text) return { fallback: true, source: 'DETERMINISTIC_FALLBACK', error: 'Empty response part from Gemini' };
 
     const parsed = JSON.parse(text);
+    if (!validateStructuredSchema(parsed)) {
+      return { fallback: true, source: 'DETERMINISTIC_FALLBACK', error: 'Response schema mismatch' };
+    }
+
     return {
       fallback: false,
       source: 'AI_GEMINI',

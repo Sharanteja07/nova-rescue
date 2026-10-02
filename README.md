@@ -170,8 +170,8 @@ $$R = 100 - \left( 0.40 \cdot \text{Risk}_{\text{inventory}} + 0.30 \cdot \text{
 
 ## Google Technology
 
-NOVA RESCUE integrates **Google Gemini 1.5 Flash** (and Gemini 2.0 Flash) through Google's official REST API endpoint:
-- **Model:** `gemini-1.5-flash`
+NOVA RESCUE integrates **Google Gemini 2.5 Flash** through Google's official REST API endpoint:
+- **Model:** `gemini-2.5-flash` (configurable via `process.env.GEMINI_MODEL`)
 - **Output Enforcement:** `responseMimeType: "application/json"` with prompt-constrained JSON schema.
 - **Failover Architecture:** Complete programmatic fallback to internal deterministic reasoning if keys are absent or invalid.
 - *Technology verified & implemented:* Direct Google Gemini API generation with structured output. No unimplemented services are claimed.
@@ -231,11 +231,12 @@ Comprehensive automated tests written in **Vitest**:
 npm test
 ```
 
-### Test Coverage (20 Passing Tests across 5 Suites)
-1. **Server Proxy Security (`src/tests/serverProxy.test.ts` - 3 tests):**
+### Test Coverage (21 Passing Tests across 5 Suites)
+1. **Server Proxy Security (`src/tests/serverProxy.test.ts` - 4 tests):**
    - Secure fallback when no `GEMINI_API_KEY` is configured on the server.
    - Safe rejection of placeholder or empty keys.
    - Structured JSON operational schema validation.
+   - Rejection and safe fallback on null or invalid order telemetry payloads.
 2. **Risk Engine (`src/tests/riskEngine.test.ts` - 8 tests):**
    - Low inventory risk on fresh sync (<1h).
    - Critical inventory risk detection on stale inventory (>24h, >48h).
@@ -265,8 +266,8 @@ npm test
 - **Semantic HTML5:** Built using `<header>`, `<main>`, `<section>`, `<article>`, `<nav>`, `<table>`, and native `<button>` controls.
 - **Accessible Colors:** Contrast ratios exceed WCAG AA standards; high-contrast deep slate background (`#090d16`) with crisp typography.
 - **Not Color Alone:** Every risk state pairs color badges with explicit text labels (`CRITICAL`, `HIGH`, `MEDIUM`, `LOW`, `RESCUED`) and semantic icons.
-- **Keyboard Navigation & Focus:** Full keyboard navigation support with prominent `:focus-visible` outlines (`outline: 2px solid #3b82f6`).
-- **Screen Reader Support:** ARIA attributes (`role="region"`, `role="tablist"`, `aria-selected`, `aria-label`) for accessible stream navigation.
+- **Keyboard Navigation & Focus:** Full keyboard navigation support with prominent `:focus-visible` outlines (`outline: 2px solid #3b82f6`) and `Escape` key dismissal for all operational dialogs.
+- **Screen Reader Support:** ARIA attributes (`role="region"`, `role="tablist"`, `role="dialog"`, `aria-modal="true"`, `aria-selected`, `aria-label`) for accessible stream navigation and dialogs.
 
 ---
 
@@ -285,9 +286,9 @@ cd nova-rescue
 # 2. Install dependencies
 npm install
 
-# 3. (Optional) Configure Gemini API Key
+# 3. (Optional) Configure Server-Side Gemini API Key
 cp .env.example .env.local
-# Add your key to GEMINI_API_KEY in .env.local, or enter it in the app UI
+# Add your key to GEMINI_API_KEY in .env.local (runs strictly on Node.js server)
 ```
 
 ### Running Locally
@@ -319,15 +320,43 @@ See [.env.example](file:///.env.example):
 GEMINI_API_KEY=your_gemini_api_key_here
 
 # Selected Gemini Model
-GEMINI_MODEL=gemini-1.5-flash
+GEMINI_MODEL=gemini-2.5-flash
 
-# Port Configuration
-PORT=3000
+# Port Configuration (Google Cloud Run defaults to 8080)
+PORT=8080
 ```
 
 ---
 
 ## Deployment
+
+### Deploy to Google Cloud Run (Recommended)
+NOVA RESCUE includes a minimal, multi-stage [Dockerfile](file:///Dockerfile) configured specifically for Cloud Run:
+```bash
+# 1. Build and deploy container directly to Cloud Run
+gcloud run deploy nova-rescue \
+  --source . \
+  --platform managed \
+  --region asia-south1 \
+  --allow-unauthenticated \
+  --set-env-vars GEMINI_MODEL=gemini-2.5-flash
+
+# 2. (Optional) Set secure Gemini API key as a Secret or Env Var:
+gcloud run services update nova-rescue \
+  --set-env-vars GEMINI_API_KEY=your_gemini_api_key_here
+```
+- **Port:** Listens dynamically on `process.env.PORT` (defaults to `8080`).
+- **Entrypoint:** `npm start` (executes native `node server.js` serving `/api/status`, `/api/analyze-order`, and the Vite frontend).
+
+### Standalone Production Server
+```bash
+# 1. Build client bundle
+npm run build
+
+# 2. Start server
+npm start
+# Server starts on http://127.0.0.1:8080
+```
 
 ### Deploy to Vercel or Netlify
 1. Connect this repository to Vercel or Netlify.

@@ -27,7 +27,7 @@ export const App: React.FC = () => {
   const [activeRescueAction, setActiveRescueAction] = useState<RescueActionType | null>(null);
   const [serverStatus, setServerStatus] = useState<ServerAiStatus>({
     configured: false,
-    model: 'gemini-1.5-flash',
+    model: 'gemini-2.5-flash',
     mode: 'DETERMINISTIC_FALLBACK'
   });
 
@@ -65,7 +65,10 @@ export const App: React.FC = () => {
   // Automatically trigger analysis whenever selected order changes
   useEffect(() => {
     if (selectedOrder && !aiAnalyses[selectedOrder.id]) {
-      runAnalysis(selectedOrder);
+      const timer = setTimeout(() => {
+        runAnalysis(selectedOrder);
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [selectedOrder, aiAnalyses, runAnalysis]);
 

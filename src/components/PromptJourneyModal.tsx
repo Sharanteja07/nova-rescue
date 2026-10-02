@@ -1,5 +1,5 @@
-import React from 'react';
-import { X, Compass, CheckCircle2, ArrowRight } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { X, Compass, CheckCircle2 } from 'lucide-react';
 
 interface PromptJourneyModalProps {
   isOpen: boolean;
@@ -49,6 +49,17 @@ export const PromptJourneyModal: React.FC<PromptJourneyModalProps> = ({
   isOpen,
   onClose
 }) => {
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (

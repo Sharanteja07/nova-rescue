@@ -1,5 +1,5 @@
-import React from 'react';
-import { X, ShieldCheck, Cpu, Server, Lock, ArrowRight } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { X, ShieldCheck, Cpu, Server, Lock } from 'lucide-react';
 import { ServerAiStatus } from '../services/aiService';
 
 interface AiArchitectureModalProps {
@@ -13,6 +13,17 @@ export const AiArchitectureModal: React.FC<AiArchitectureModalProps> = ({
   onClose,
   serverStatus
 }) => {
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (

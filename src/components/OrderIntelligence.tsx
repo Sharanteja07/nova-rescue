@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   Order, 
   AIAnalysisResult, 
@@ -7,7 +7,6 @@ import {
 import { 
   Clock, 
   Store, 
-  MapPin, 
   User, 
   Package, 
   Sparkles, 
@@ -16,8 +15,6 @@ import {
   ArrowRight, 
   ShieldCheck, 
   RefreshCw,
-  TrendingDown,
-  Info,
   Phone
 } from 'lucide-react';
 

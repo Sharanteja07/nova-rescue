@@ -39,17 +39,17 @@ export async function checkServerAiStatus(): Promise<ServerAiStatus> {
       const data = await res.json();
       return {
         configured: Boolean(data.configured),
-        model: data.model || 'gemini-1.5-flash',
+        model: data.model || 'gemini-2.5-flash',
         mode: data.configured ? 'SERVER_SIDE_GEMINI' : 'DETERMINISTIC_FALLBACK'
       };
     }
-  } catch (err) {
+  } catch {
     // If running in an environment without server endpoint, default safely to fallback
   }
 
   return {
     configured: false,
-    model: 'gemini-1.5-flash',
+    model: 'gemini-2.5-flash',
     mode: 'DETERMINISTIC_FALLBACK'
   };
 }
@@ -86,7 +86,7 @@ export async function analyzeOrderWithAI(order: Order): Promise<AIAnalysisResult
         };
       }
     }
-  } catch (error) {
+  } catch {
     // Network failure or server endpoint unreachable
   }
 

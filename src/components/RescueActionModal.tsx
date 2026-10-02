@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Order, 
   RescueActionType, 
@@ -7,13 +7,7 @@ import {
 import { getAlternativeStoresForOrder, ApplyRescuePayload } from '../engine/rescueEngine';
 import { 
   X, 
-  Store, 
-  Package, 
-  Phone, 
-  Clock, 
   Check, 
-  AlertTriangle,
-  ArrowRight,
   ShieldCheck
 } from 'lucide-react';
 
@@ -36,6 +30,16 @@ export const RescueActionModal: React.FC<RescueActionModalProps> = ({
     `Hi ${order.customer.customerName}, your NOVA CART order (${order.id}) is being fulfilled with priority. To guarantee peak quality, our operations team has assigned a dedicated priority courier with live temperature tracking. Track your delivery: https://novacart.in/track/${order.id}`
   );
   const [operatorNote, setOperatorNote] = useState('');
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   const handleConfirm = () => {
     onApplyRescue({
@@ -82,7 +86,7 @@ export const RescueActionModal: React.FC<RescueActionModalProps> = ({
         {/* Body Content based on Action */}
         <div className="modal-body">
           {actionType === 'SWITCH_STORE' && (
-            <div style={{ display: 'flex', flexDirectio: 'column', gap: '1rem' } as any}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <p style={{ fontSize: '0.8125rem', color: '#94a3b8' }}>
                 Current store <strong>{order.store.storeName}</strong> has stale inventory ({order.store.inventoryLastUpdatedHoursAgo.toFixed(1)} hrs old) 
                 and a {(order.store.rejectionRate * 100).toFixed(0)}% rejection rate. Select an alternative partner hub with fresh inventory:

@@ -38,4 +38,14 @@ describe('NOVA RESCUE - Server-Side Gemini Proxy Security Tests', () => {
     // Invalid action
     expect(validateStructuredSchema({ ...valid, recommended_action: 'UNKNOWN_ACTION' })).toBe(false);
   });
+
+  it('4. should reject null or invalid order payloads and safely fall back', async () => {
+    const result = await processServerOrderAnalysis(null, 'test_key');
+    expect(result.fallback).toBe(true);
+    expect(result.error).toContain('Invalid order telemetry payload');
+
+    const resultNoId = await processServerOrderAnalysis({ foo: 'bar' }, 'test_key');
+    expect(resultNoId.fallback).toBe(true);
+    expect(resultNoId.error).toContain('Invalid order telemetry payload');
+  });
 });

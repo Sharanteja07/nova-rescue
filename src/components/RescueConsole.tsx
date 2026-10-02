@@ -7,8 +7,7 @@ import {
   TrendingDown, 
   HelpCircle,
   Search,
-  ShieldCheck,
-  UserCheck
+  ShieldCheck
 } from 'lucide-react';
 import { Order, RiskLevel } from '../types';
 
